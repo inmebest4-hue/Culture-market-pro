@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Administration — Culture Market</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="../icons/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="admin.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body class="admin-body">
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2>Administration<br/>Culture Market</h2>
+    <div class="form-field">
+      <label>E-mail</label>
+      <input type="email" id="login-email" />
+    </div>
+    <div class="form-field">
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" />
+    </div>
+    <p class="field-error" id="login-error" style="display:none;">Identifiants incorrects.</p>
+    <button class="btn btn-primary btn-block" id="btn-login">Se connecter</button>
+    <p style="font-size:.78rem; color:var(--texte-doux); margin-top:14px; text-align:center;">
+      Compte créé depuis Supabase &gt; Authentication &gt; Users.<br/>Voir GUIDE.md, étape 4.
+    </p>
+  </div>
+</div>
+
+<!-- ESPACE ADMIN -->
+<div id="admin-screen" style="display:none;">
+  <div class="admin-header">
+    <h1>Administration — Culture Market</h1>
+    <button id="btn-logout">Se déconnecter</button>
+  </div>
+
+  <div id="storage-alert-banner" class="storage-alert-banner" style="display:none;"></div>
+
+  <div class="admin-wrap">
+    <div class="admin-tabs">
+      <button data-panel="panel-produits" class="active">Produits</button>
+      <button data-panel="panel-categories">Catégories</button>
+      <button data-panel="panel-zones">Zones de livraison</button>
+      <button data-panel="panel-paiements">Moyens de paiement</button>
+      <button data-panel="panel-commandes">Commandes</button>
+      <button data-panel="panel-stockage">Stockage &amp; archivage</button>
+      <button data-panel="panel-reglages">Réglages du site</button>
+    </div>
+
+    <!-- PRODUITS -->
+    <div class="admin-panel active" id="panel-produits">
+      <div class="admin-section-title">
+        <h3 style="margin:0;">Produits</h3>
+        <button class="mini-btn add" id="btn-add-product">+ Ajouter un produit</button>
+      </div>
+      <div class="table-scroll">
+        <table class="admin-table" id="table-products">
+          <thead>
+            <tr>
+              <th>Nom</th><th>Catégorie</th><th>Unité</th><th>Prix (FC)</th><th>Photo</th><th>Dispo.</th><th>Ordre</th><th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="admin-panel" id="panel-categories">
+      <div class="admin-section-title">
+        <h3 style="margin:0;">Catégories</h3>
+        <button class="mini-btn add" id="btn-add-category">+ Ajouter une catégorie</button>
+      </div>
+      <div class="table-scroll">
+        <table class="admin-table" id="table-categories">
+          <thead><tr><th>Nom</th><th>Identifiant (slug)</th><th>Ordre</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ZONES -->
+    <div class="admin-panel" id="panel-zones">
+      <div class="admin-section-title">
+        <h3 style="margin:0;">Zones de livraison</h3>
+        <button class="mini-btn add" id="btn-add-zone">+ Ajouter une zone</button>
+      </div>
+      <div class="table-scroll">
+        <table class="admin-table" id="table-zones">
+          <thead><tr><th>Commune / quartier</th><th>Frais (FC)</th><th>Actif</th><th>Ordre</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAIEMENTS -->
+    <div class="admin-panel" id="panel-paiements">
+      <div class="admin-section-title">
+        <h3 style="margin:0;">Moyens de paiement</h3>
+        <button class="mini-btn add" id="btn-add-payment">+ Ajouter un moyen</button>
+      </div>
+      <div class="table-scroll">
+        <table class="admin-table" id="table-payments">
+          <thead><tr><th>Nom</th><th>Instructions</th><th>Actif</th><th>Ordre</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COMMANDES -->
+    <div class="admin-panel" id="panel-commandes">
+      <h3>Commandes</h3>
+      <div class="table-scroll">
+        <table class="admin-table" id="table-orders">
+          <thead><tr><th>Numéro</th><th>Client</th><th>Téléphone</th><th>Commune</th><th>Total</th><th>Statut</th><th>Date</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STOCKAGE & ARCHIVAGE -->
+    <div class="admin-panel" id="panel-stockage">
+      <h3>Stockage &amp; archivage</h3>
+      <p style="margin-top:-4px;">
+        Votre plan Supabase limite l'espace disponible. Ce panneau estime votre
+        usage actuel et vous permet d'archiver les anciennes commandes
+        (téléchargement complet en tableur, rien n'est supprimé sans que vous
+        l'ayez d'abord téléchargé).
+      </p>
+
+      <div class="storage-cards">
+        <div class="storage-card">
+          <div class="storage-card-head">
+            <strong>Base de données</strong>
+            <span id="db-usage-text">—</span>
+          </div>
+          <div class="progress-bar"><div id="db-usage-bar" style="width:0%;"></div></div>
+          <small id="db-usage-detail" class="storage-detail"></small>
+        </div>
+        <div class="storage-card">
+          <div class="storage-card-head">
+            <strong>Fichiers (photos produits)</strong>
+            <span id="files-usage-text">—</span>
+          </div>
+          <div class="progress-bar"><div id="files-usage-bar" style="width:0%;"></div></div>
+          <small id="files-usage-detail" class="storage-detail"></small>
+        </div>
+      </div>
+      <p style="font-size:.76rem; color:var(--texte-doux); margin-top:10px;">
+        Limites utilisées pour ce calcul : réglables ci-dessous dans
+        <strong>Réglages du site</strong> (mettez-les à jour si vous changez de
+        formule Supabase). Estimation indicative, pas une mesure exacte au
+        bloc près.
+      </p>
+
+      <div class="archive-box">
+        <h4 style="margin:0 0 10px;">Archiver les anciennes commandes</h4>
+        <div class="archive-controls">
+          <div class="form-field" style="margin-bottom:0;">
+            <label>Commandes antérieures au</label>
+            <input type="date" id="archive-before-date" />
+          </div>
+          <label class="archive-checkbox">
+            <input type="checkbox" id="archive-only-closed" checked />
+            Uniquement celles livrées ou annulées (recommandé)
+          </label>
+        </div>
+        <p id="archive-preview-text" class="storage-detail" style="margin:10px 0;"></p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="btn-archive-download">1. Télécharger l'archive (.csv)</button>
+          <button class="btn btn-outline" id="btn-archive-delete" disabled>2. Confirmer l'archivage (libérer l'espace)</button>
+        </div>
+        <p style="font-size:.76rem; color:var(--texte-doux); margin-top:10px;">
+          Étape 2 n'est activée qu'après un téléchargement réussi de l'étape 1,
+          et ne porte que sur l'exact lot téléchargé. Le fichier .csv s'ouvre
+          dans Excel, Google Sheets ou directement sur votre téléphone — gardez-le
+          précieusement, c'est votre seule copie une fois l'archivage confirmé.
+        </p>
+      </div>
+    </div>
+
+    <!-- REGLAGES -->
+    <div class="admin-panel" id="panel-reglages">
+      <h3>Réglages du site</h3>
+      <div class="settings-grid" id="settings-grid"></div>
+      <button class="btn btn-primary" id="btn-save-settings" style="margin-top:16px;">Enregistrer les réglages</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/config.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

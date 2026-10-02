@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Culture Market — Le marché vient à vous</title>
+<meta name="description" content="Culture Market : légumes, aromates et paniers frais, cultivés et livrés localement à Lubumbashi. Composez votre panier en quelques clics." />
+<meta name="theme-color" content="#1E3D2B" />
+
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <img class="logo" id="logo-img" src="icons/icon-192.png" alt="Logo Culture Market" />
+    <div class="brand-text">
+      <h1 id="nom-entreprise">Culture Market</h1>
+      <p class="tagline" id="slogan">Le marché vient à vous</p>
+    </div>
+    <button class="install-btn" id="btn-install">Installer l'app</button>
+  </div>
+  <nav class="tab-nav" id="tab-nav">
+    <button data-target="#accueil" class="active">Accueil</button>
+    <button data-target="#produits">Produits</button>
+    <button data-target="#comment-ca-marche">Comment ça marche</button>
+    <button data-target="#mes-commandes">Mes commandes</button>
+    <button data-target="#contact">Contact</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= ACCUEIL ================= -->
+  <section id="accueil" class="active">
+
+    <div class="hero">
+      <img class="hero-media" src="images/hero-champ.jpg" alt="Récolte Culture" />
+      <div class="hero-content">
+        <span class="eyebrow">Culture</span>
+        <h2>Le marché vient à vous.</h2>
+        <p id="presentation-text">Chargement…</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn btn-primary" data-nav="#produits">Composer mon panier</button>
+          <button class="btn btn-outline on-dark" data-nav="#comment-ca-marche">Comment ça marche</button>
+        </div>
+        <div class="badges-row">
+          <span class="badge">Frais</span>
+          <span class="badge">Local</span>
+          <span class="badge">Simple</span>
+          <span class="badge">Livré</span>
+        </div>
+      </div>
+    </div>
+
+    <span class="eyebrow">Votre marché, votre sélection</span>
+    <h3 class="section-title">Nos catégories</h3>
+    <div class="cat-scroll" id="cat-scroll-home"></div>
+
+    <div id="comment-ca-marche-inline">
+      <span class="eyebrow">Pas de panier imposé</span>
+      <h3 class="section-title">Comment ça marche</h3>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h4>Choisissez</h4>
+          <p>Sélectionnez les légumes et les quantités que vous souhaitez.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h4>Composez</h4>
+          <p>Créez votre panier selon vos besoins, sans pack imposé.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h4>Recevez</h4>
+          <p>Culture prépare votre commande et vous la livre à domicile.</p>
+        </div>
+      </div>
+    </div>
+
+    <span class="eyebrow">Cultiver une meilleure manière de vivre</span>
+    <h3 class="section-title">Pourquoi Culture Market ?</h3>
+    <div class="pillars">
+      <div class="pillar"><h4>Frais</h4><p>Des produits sélectionnés avec attention.</p></div>
+      <div class="pillar"><h4>Local</h4><p>Nous valorisons les producteurs et ressources locales.</p></div>
+      <div class="pillar"><h4>Simple</h4><p>Votre marché, accessible depuis votre téléphone.</p></div>
+      <div class="pillar"><h4>Pratique</h4><p>Vous choisissez ce dont vous avez réellement besoin.</p></div>
+    </div>
+
+    <div class="info-band">
+      <div class="item">
+        <div class="label">Ville</div>
+        <div class="value" id="home-ville">Lubumbashi</div>
+      </div>
+      <div class="item">
+        <div class="label">Livraison</div>
+        <div class="value" id="home-horaires">Lun. — Sam. | 9h — 11h</div>
+      </div>
+      <div class="item">
+        <div class="label">Commande minimum</div>
+        <div class="value" id="home-min">22 000 FC</div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <h3 style="margin-bottom:14px;">Prêt(e) à faire votre marché ?</h3>
+      <button class="btn btn-primary" data-nav="#produits">Composer mon panier</button>
+    </div>
+
+  </section>
+
+  <!-- ================= PRODUITS ================= -->
+  <section id="produits">
+    <span class="eyebrow">Votre marché, votre sélection</span>
+    <h2 class="section-title">Nos produits</h2>
+    <div class="cat-filters" id="cat-filters"></div>
+    <div class="produits-grid" id="produits-grid"></div>
+  </section>
+
+  <!-- ================= COMMENT CA MARCHE (page dédiée, ancre) ================= -->
+  <section id="comment-ca-marche">
+    <span class="eyebrow">Pas de panier imposé</span>
+    <h2 class="section-title">Comment ça marche</h2>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h4>Choisissez</h4>
+        <p>Sélectionnez les légumes et les quantités que vous souhaitez.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h4>Composez</h4>
+        <p>Créez votre panier selon vos besoins, sans pack imposé.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h4>Recevez</h4>
+        <p>Culture prépare votre commande et vous la livre à domicile.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <h3>Livraison</h3>
+      <p><strong id="cc-ville">Lubumbashi</strong> — livraison à domicile, <span id="cc-horaires">du lundi au samedi, de 9h à 11h</span>. Les frais de livraison sont calculés selon votre zone.</p>
+      <p>Commande minimum : <strong id="cc-min">22 000 FC</strong>.</p>
+      <button class="btn btn-primary" data-nav="#produits">Composer mon panier</button>
+    </div>
+  </section>
+
+  <!-- ================= MES COMMANDES ================= -->
+  <section id="mes-commandes">
+    <span class="eyebrow">Suivi</span>
+    <h2 class="section-title">Mes commandes</h2>
+    <div class="card">
+      <div class="form-field">
+        <label>Numéro de téléphone utilisé à la commande</label>
+        <input type="tel" id="lookup-tel" placeholder="Ex : 0970300731" />
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-lookup">Afficher mes commandes</button>
+    </div>
+    <div id="mes-commandes-liste" style="margin-top:16px;"></div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact">
+    <span class="eyebrow">Nous joindre</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="card">
+      <div class="contact-item">
+        <div>
+          <div class="label">Responsable</div>
+          <div class="value" id="contact-responsable">—</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div>
+          <div class="label">Téléphone</div>
+          <a class="value" id="contact-tel" href="#">—</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div>
+          <div class="label">E-mail</div>
+          <a class="value" id="contact-email" href="#">—</a>
+        </div>
+      </div>
+      <a class="btn btn-primary btn-block" style="margin-top:14px;" id="contact-whatsapp" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      <div class="social-row" id="social-row"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>Localisation</h3>
+      <p id="adresse-texte">Lubumbashi, Haut-Katanga, RDC</p>
+      <a class="btn btn-outline btn-block" id="btn-maps" target="_blank" rel="noopener">Ouvrir dans Google Maps</a>
+    </div>
+  </section>
+
+</main>
+
+<div class="site-footer-text">© <span id="annee"></span> Culture Market — Cultiver une meilleure manière de vivre</div>
+
+<!-- ZONE FIXE BASSE : panier (si articles) empilé au-dessus de la nav -->
+<div class="fixed-bottom-area" id="fixed-bottom-area">
+  <div class="cart-bar" id="cart-bar">
+    <div>
+      <div class="count" id="cart-bar-count">0 article</div>
+      <div class="amount" id="cart-bar-amount">0 FC</div>
+    </div>
+    <button id="btn-open-cart">Voir mon panier</button>
+  </div>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <button data-target="#accueil" class="active">Accueil</button>
+    <button data-target="#produits">Produits</button>
+    <button data-target="#mes-commandes">Commandes</button>
+    <button data-target="#contact">Contact</button>
+  </nav>
+</div>
+
+<!-- DRAWER PANIER / COMMANDE -->
+<div class="drawer-overlay" id="drawer-overlay">
+  <div class="drawer" id="drawer">
+
+    <!-- Étape 1 : PANIER -->
+    <div class="drawer-step" id="step-panier">
+      <div class="drawer-header">
+        <h3 style="margin:0;">Votre panier</h3>
+        <button class="drawer-close" data-close>&times;</button>
+      </div>
+      <div id="cart-lines"></div>
+      <div id="cart-empty" style="display:none; padding:30px 0; text-align:center; color:var(--texte-doux);">
+        Votre panier est vide pour l'instant.
+      </div>
+      <div class="cart-summary">
+        <div class="cart-summary-row total"><span>Total</span><span id="cart-total">0 FC</span></div>
+        <div class="min-order-box" id="min-order-box">
+          <span id="min-order-text">Commande minimum : 22 000 FC</span>
+          <div class="progress-bar"><div id="min-order-progress" style="width:0%;"></div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:16px;" id="btn-goto-livraison">Continuer</button>
+    </div>
+
+    <!-- Étape 2 : LIVRAISON -->
+    <div class="drawer-step" id="step-livraison" style="display:none;">
+      <div class="drawer-header">
+        <h3 style="margin:0;">Livraison</h3>
+        <button class="drawer-close" data-close>&times;</button>
+      </div>
+      <div class="checkout-steps"><div class="dot done"></div><div class="dot current"></div><div class="dot"></div></div>
+      <div class="form-field">
+        <label>Nom complet</label>
+        <input type="text" id="cmd-nom" />
+      </div>
+      <div class="form-field">
+        <label>Téléphone / WhatsApp</label>
+        <input type="tel" id="cmd-tel" placeholder="Ex : 0970300731" />
+      </div>
+      <div class="form-field">
+        <label>Commune / quartier</label>
+        <select id="cmd-commune"></select>
+      </div>
+      <div class="form-field">
+        <label>Adresse de livraison</label>
+        <textarea id="cmd-adresse" rows="2" placeholder="Avenue, numéro, référence..."></textarea>
+      </div>
+      <div class="form-field">
+        <label>Mode</label>
+        <select id="cmd-mode">
+          <option value="domicile">Livraison à domicile</option>
+          <option value="relais">Point relais</option>
+          <option value="retrait">Retrait sur place</option>
+        </select>
+      </div>
+      <div class="cart-summary" style="border-top:none; margin-top:0; padding-top:0;">
+        <div class="cart-summary-row"><span>Sous-total</span><span id="liv-sous-total">0 FC</span></div>
+        <div class="cart-summary-row"><span>Frais de livraison</span><span id="liv-frais">0 FC</span></div>
+        <div class="cart-summary-row total"><span>Total</span><span id="liv-total">0 FC</span></div>
+      </div>
+      <p class="field-error" id="liv-error">Merci de compléter tous les champs.</p>
+      <button class="btn btn-primary btn-block" id="btn-goto-paiement">Continuer vers le paiement</button>
+      <button class="btn btn-outline btn-block" style="margin-top:10px;" data-back="step-panier">Retour</button>
+    </div>
+
+    <!-- Étape 3 : PAIEMENT -->
+    <div class="drawer-step" id="step-paiement" style="display:none;">
+      <div class="drawer-header">
+        <h3 style="margin:0;">Paiement</h3>
+        <button class="drawer-close" data-close>&times;</button>
+      </div>
+      <div class="checkout-steps"><div class="dot done"></div><div class="dot done"></div><div class="dot current"></div></div>
+      <p>Choisissez votre mode de paiement. Les moyens définitifs seront confirmés si nécessaire par notre équipe.</p>
+      <div id="pay-options"></div>
+      <div class="cart-summary" style="border-top:none; margin-top:0; padding-top:0;">
+        <div class="cart-summary-row total"><span>Montant à payer</span><span id="pay-total">0 FC</span></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-confirmer-commande">Valider ma commande</button>
+      <button class="btn btn-outline btn-block" style="margin-top:10px;" data-back="step-livraison">Retour</button>
+    </div>
+
+    <!-- Étape 4 : CONFIRMATION -->
+    <div class="drawer-step" id="step-confirmation" style="display:none;">
+      <div class="drawer-header">
+        <h3 style="margin:0;">Commande envoyée</h3>
+        <button class="drawer-close" data-close>&times;</button>
+      </div>
+      <div class="confirmation-box">
+        <p>Merci ! Votre commande a bien été enregistrée.</p>
+        <div class="num" id="conf-numero">CM-000000</div>
+        <p>Notre équipe la prépare et vous contactera avant la livraison. Vous pouvez retrouver son statut à tout moment dans « Mes commandes ».</p>
+        <a class="btn btn-primary btn-block" id="conf-whatsapp" target="_blank" rel="noopener">Confirmer sur WhatsApp</a>
+        <button class="btn btn-outline btn-block" style="margin-top:10px;" data-close>Fermer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
